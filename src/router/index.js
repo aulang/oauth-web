@@ -20,6 +20,11 @@ const routes = [
       redirectUri: route.query.redirect_uri,
       state: route.query.state
     })
+  },
+  {
+    path: '/approval',
+    name: 'approval',
+    component: () => import('../views/ApprovalScope.vue')
   }
 ]
 

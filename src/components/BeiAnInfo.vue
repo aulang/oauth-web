@@ -2,11 +2,7 @@
   <div>
     <el-row class="copyright">
       <span v-text="'©' + year"></span>
-      <el-link
-        target="_blank"
-        href="https://aulang.cn"
-        v-text="author"
-      ></el-link>
+      <span v-text="author"></span>
     </el-row>
 
     <el-row class="beian">
