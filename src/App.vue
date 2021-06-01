@@ -1,8 +1,32 @@
 <template>
   <div id="app">
-    <router-view />
+    <el-container>
+      <el-header height="">
+        <el-image
+          title="logo"
+          :src="require('@/assets/logo.png')"
+        ></el-image>
+      </el-header>
+
+      <el-main>
+        <router-view />
+      </el-main>
+
+      <el-footer height="">
+        <bei-an-info></bei-an-info>
+      </el-footer>
+    </el-container>
   </div>
 </template>
+
+<script>
+import BeiAnInfo from '@/components/BeiAnInfo.vue'
+export default {
+  components: {
+    BeiAnInfo
+  }
+}
+</script>
 
 <style lang="scss">
 #app {

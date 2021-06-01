@@ -69,10 +69,13 @@ export default {
   name: 'LoginBox',
   data() {
     var validateCaptcha = (rule, value, callback) => {
-      if (this.needCaptcha && value === '') {
+      if (!this.needCaptcha) {
+        callback();
+        return;
+      }
+
+      if (!Number.isInteger(value)) {
         callback(new Error('请输入验证码'));
-      } else if (!Number.isInteger(value)) {
-        callback(new Error('请输入数字'));
       } else {
         callback();
       }
