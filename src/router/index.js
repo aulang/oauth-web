@@ -25,6 +25,16 @@ const routes = [
     path: '/approval',
     name: 'approval',
     component: () => import('../views/ApprovalScope.vue')
+  },
+  {
+    path: '/locked',
+    name: 'locked',
+    component: () => import('../views/AccountLocked.vue')
+  },
+  {
+    path: '/changepwd',
+    name: 'changepwd',
+    component: () => import('../views/ChangePassword.vue')
   }
 ]
 

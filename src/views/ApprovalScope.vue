@@ -1,7 +1,7 @@
 <template>
   <el-form>
     <el-form-item>
-      <span v-text="'授权' + clientName + '访问您的：'"></span>
+      <span v-text="'授权【' + clientName + '】访问您的：'"></span>
     </el-form-item>
 
     <el-form-item>
@@ -19,6 +19,11 @@
 
     <el-form-item>
       <el-button
+        type="danger"
+        @click="reject"
+      >拒&emsp;绝</el-button>
+
+      <el-button
         type="primary"
         @click="approval"
       >授&emsp;权</el-button>
@@ -32,7 +37,7 @@ export default {
   data() {
     return {
       clientId: '',
-      clientName: 'clientName',
+      clientName: '客户端',
       scopes: [{
         code: 'code1',
         name: 'name1',
@@ -58,4 +63,7 @@ export default {
 </script>
 
 <style scoped>
+.el-form-item .el-button {
+  margin: 1rem;
+}
 </style>

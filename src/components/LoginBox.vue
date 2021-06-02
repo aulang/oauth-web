@@ -58,7 +58,7 @@
           type="primary"
           class="loginBtn"
           @click="login"
-        >登 录</el-button>
+        >登&emsp;录</el-button>
       </el-form-item>
     </el-form>
   </div>
