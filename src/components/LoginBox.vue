@@ -151,7 +151,7 @@ export default {
           return;
         } else if (data.code === errorCodes.passwordExpired) {
           // 密码过期，修改密码
-          this.$router.push('/changepwd');
+          this.$router.push('/change-pwd');
           return;
         } else if (data.code === errorCodes.accountLocked) {
           // 账号锁定
