@@ -10,6 +10,7 @@ const routes = [
     component: () => import('../views/Index.vue')
   },
   {
+    // authorize?client_id=5f37d9f4c4155cda795f8fe5&response_type=code&redirect_uri=https%3A%2F%2Faulang.cn%2Fsite%2Findex&state=xxxxxx&code_challenge=jZae727K08KaOmKSgOaGzww_XVqGr_PKEgIMkjrcbJI
     path: '/authorize',
     name: 'authorize',
     component: () => import('../views/Authorize.vue'),
@@ -17,8 +18,9 @@ const routes = [
       clientId: route.query.client_id,
       responseType: route.query.response_type,
       scope: route.query.scope,
+      state: route.query.state,
       redirectUri: route.query.redirect_uri,
-      state: route.query.state
+      codeChallenge: route.query.code_challenge
     })
   },
   {

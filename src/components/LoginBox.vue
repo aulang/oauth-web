@@ -40,7 +40,7 @@
           <el-form-item>
             <el-image
               fit="fill"
-              :src="require('@/assets/captcha.png')"
+              :src="captchaUrl"
             ></el-image>
           </el-form-item>
         </el-col>
@@ -57,7 +57,9 @@
         <el-button
           type="primary"
           class="loginBtn"
-          @click="login"
+          @click="onLogin"
+          :loading="loading"
+          :disabled="disabled"
         >登&emsp;录</el-button>
       </el-form-item>
     </el-form>
@@ -65,8 +67,16 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import { Message } from 'element-ui'
+import { login } from '@/api/login'
+import { apiBaseUrl, msgShowMilliseconds, errorCodes } from '@/utils/consts'
+
 export default {
   name: 'LoginBox',
+  props: {
+    disabled: Boolean
+  },
   data() {
     var validateCaptcha = (rule, value, callback) => {
       if (!this.needCaptcha) {
@@ -90,7 +100,7 @@ export default {
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 6, max: 32, message: '长度在 6 到 32 个字符', trigger: 'blur' }
+          { min: 3, max: 32, message: '长度在 3 到 32 个字符', trigger: 'blur' }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
@@ -98,18 +108,89 @@ export default {
         ],
         captcha: { validator: validateCaptcha, trigger: 'blur' }
       },
+      loading: false,
       rememberMe: true,
-      needCaptcha: true
+      needCaptcha: false
     };
   },
   computed: {
+    ...mapGetters([
+      'authId'
+    ]),
     captchaUrl() {
-      return '';
+      if (this.needCaptcha) {
+        return `${apiBaseUrl}/api/captcha/${this.authId}`
+      } else {
+        return ''
+      }
     }
   },
   methods: {
-    login() {
-      global.alert(this.from.username);
+    onLogin() {
+      this.$refs['from'].validate((valid) => {
+        if (valid) {
+          this.submit();
+          return true;
+        } else {
+          return false;
+        }
+      });
+    },
+    submit() {
+      this.loading = true;
+
+      login({
+        authId: this.authId,
+        username: this.from.username,
+        password: this.from.password,
+        captcha: this.from.captcha
+      }).then(data => {
+        if (data.code === errorCodes.needApproval) {
+          // 需要授权，重定向到授权页面
+          this.$router.push('/approval');
+          return;
+        } else if (data.code === errorCodes.passwordExpired) {
+          // 密码过期，修改密码
+          this.$router.push('/changepwd');
+          return;
+        } else if (data.code === errorCodes.accountLocked) {
+          // 账号锁定
+          this.$router.push('/locked');
+          return;
+        }
+
+        if (data.code !== 0) {
+          Message({
+            message: data.msg,
+            type: 'error',
+            duration: msgShowMilliseconds
+          });
+          this.needCaptcha = !!data.data.needCaptcha;
+          return;
+        }
+
+        let code = data.data.code;
+        let state = data.data.state;
+        let redirectUri = data.data.redirectUri;
+
+        let queryString = '';
+        if (state) {
+          queryString = `code=${code}&state=${state}`;
+        } else {
+          queryString = `code=${code}`;
+        }
+
+        let redirectUrl = redirectUri;
+        if (redirectUri.indexOf('?') > 0) {
+          redirectUrl = redirectUrl + queryString;
+        } else {
+          redirectUrl = redirectUrl + '?' + queryString;
+        }
+
+        window.location.assign(redirectUrl);
+      });
+
+      this.loading = false;
     }
   }
 }

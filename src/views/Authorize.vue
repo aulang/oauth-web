@@ -15,8 +15,14 @@
       :lg="6"
       :xl="6"
     >
-      <login-box v-if="userpass"></login-box>
-      <mobile-login-box v-else></mobile-login-box>
+      <login-box
+        v-if="userpass"
+        :disabled="disabled"
+      ></login-box>
+      <mobile-login-box
+        v-else
+        :disabled="disabled"
+      ></mobile-login-box>
 
       <el-image
         fit="fill"
@@ -51,14 +57,20 @@
 import LoginBox from '@/components/LoginBox.vue'
 import MobileLoginBox from '@/components/MobileLoginBox.vue'
 
+import { Message } from 'element-ui'
+import { authorize } from '@/api/authorize'
+import { mapGetters, mapMutations } from 'vuex'
+import { msgShowMilliseconds } from '@/utils/consts'
+
 export default {
   name: 'Authorize',
   props: {
     clientId: String,
     responseType: String,
     scope: String,
+    state: String,
     redirectUri: String,
-    state: String
+    codeChallenge: String
   },
   components: {
     LoginBox,
@@ -66,12 +78,21 @@ export default {
   },
   data() {
     return {
+      disabled: true,
       userpass: true,
       loginTypeMsg: '手机号登录',
       loginTypeImgUrl: require('@/assets/mobile.png')
     }
   },
+  computed: {
+    ...mapGetters([
+      'authId'
+    ])
+  },
   methods: {
+    ...mapMutations([
+      'setAuthId'
+    ]),
     changeLoginType() {
       this.userpass = !this.userpass
       if (this.userpass) {
@@ -82,6 +103,41 @@ export default {
         this.loginTypeImgUrl = require('@/assets/userpass.png')
       }
     }
+  },
+  mounted() {
+    if (this.authId) {
+      return;
+    }
+
+    if (!this.clientId || !this.responseType || !this.redirectUri || !this.codeChallenge) {
+      Message({
+        message: '参数不合法',
+        type: 'error',
+        duration: msgShowMilliseconds
+      });
+      return;
+    }
+
+    authorize({
+      clientId: this.clientId,
+      responseType: this.responseType,
+      codeChallenge: this.codeChallenge,
+      redirectUri: this.redirectUri,
+      scope: this.scope,
+      state: this.state
+    }).then(data => {
+      if (data.code !== 0) {
+        Message({
+          message: data.msg,
+          type: 'error',
+          duration: msgShowMilliseconds
+        });
+        return;
+      }
+
+      this.setAuthId(data.data.id);
+      this.disabled = false;
+    });
   }
 }
 </script>

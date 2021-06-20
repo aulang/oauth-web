@@ -1,19 +1,22 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import getters from './getters'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    authorizeId: null
+    authId: null,
   },
   mutations: {
-    authorizeId(state, payload) {
-      state.authorizeId = payload;
+    setAuthId(state, payload) {
+      state.authId = payload;
     }
   },
   actions: {
   },
   modules: {
-  }
+  },
+  getters
 })

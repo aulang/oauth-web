@@ -1,6 +1,10 @@
 <template>
   <div class="loginBox">
-    <el-form :model="from" ref="from" :rules="rules">
+    <el-form
+      :model="from"
+      ref="from"
+      :rules="rules"
+    >
       <el-form-item prop="mobile">
         <el-input
           type="text"
@@ -17,12 +21,20 @@
           placeholder="验证码"
           clearable
         >
-          <el-button slot="append" type="primary">发送验证码</el-button>
+          <el-button
+            slot="append"
+            type="primary"
+          >发送验证码</el-button>
         </el-input>
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" class="loginBtn" @click="login">登 录</el-button>
+        <el-button
+          type="primary"
+          class="loginBtn"
+          @click="login"
+          :disabled="disabled"
+        >登 录</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -31,6 +43,9 @@
 <script>
 export default {
   name: 'MobileLoginBox',
+  props: {
+    disabled: Boolean
+  },
   data() {
     return {
       from: {
