@@ -10,7 +10,7 @@ const routes = [
     component: () => import('../views/Index.vue')
   },
   {
-    // authorize?client_id=5f37d9f4c4155cda795f8fe5&response_type=code&redirect_uri=https%3A%2F%2Faulang.cn%2Fsite%2Findex&state=xxxxxx&code_challenge=jZae727K08KaOmKSgOaGzww_XVqGr_PKEgIMkjrcbJI
+    // authorize?client_id=5f37d9f4c4155cda795f8fe5&response_type=code&redirect_uri=https%3A%2F%2Faulang.cn%2Fsite%2Findex&state=123456&code_challenge=jZae727K08KaOmKSgOaGzww_XVqGr_PKEgIMkjrcbJI
     path: '/authorize',
     name: 'authorize',
     component: () => import('../views/Authorize.vue'),

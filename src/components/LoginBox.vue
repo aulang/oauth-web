@@ -67,9 +67,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import { Message } from 'element-ui'
 import { login } from '@/api/login'
+import { getAuthId } from '@/utils/auth';
 import { apiBaseUrl, msgShowMilliseconds, errorCodes } from '@/utils/consts'
 
 export default {
@@ -114,9 +114,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters([
-      'authId'
-    ]),
+    authId() {
+      return getAuthId();
+    },
     captchaUrl() {
       if (this.needCaptcha) {
         return `${apiBaseUrl}/api/captcha/${this.authId}`

@@ -59,7 +59,7 @@ import MobileLoginBox from '@/components/MobileLoginBox.vue'
 
 import { Message } from 'element-ui'
 import { authorize } from '@/api/authorize'
-import { mapGetters, mapMutations } from 'vuex'
+import { getAuthId, setAuthId } from '@/utils/auth'
 import { msgShowMilliseconds } from '@/utils/consts'
 
 export default {
@@ -84,15 +84,7 @@ export default {
       loginTypeImgUrl: require('@/assets/mobile.png')
     }
   },
-  computed: {
-    ...mapGetters([
-      'authId'
-    ])
-  },
   methods: {
-    ...mapMutations([
-      'setAuthId'
-    ]),
     changeLoginType() {
       this.userpass = !this.userpass
       if (this.userpass) {
@@ -105,7 +97,8 @@ export default {
     }
   },
   mounted() {
-    if (this.authId) {
+    if (getAuthId()) {
+      this.disabled = false;
       return;
     }
 
@@ -134,8 +127,7 @@ export default {
         });
         return;
       }
-
-      this.setAuthId(data.data.id);
+      setAuthId(data.data.authId);
       this.disabled = false;
     });
   }

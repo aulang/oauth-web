@@ -1,5 +1,5 @@
 const getters = {
-    authId: state => state.authId
+    //authId: state => state.authId
 }
 
 export default getters

@@ -3,13 +3,10 @@ import { Message } from 'element-ui'
 import { getToken } from '@/utils/auth'
 import { apiBaseUrl } from '@/utils/consts'
 
-axios.defaults.crossDomain = true
-axios.defaults.withCredentials = true
-
 // create an axios instance
 const service = axios.create({
     baseURL: apiBaseUrl, // url = base url + request url
-    // withCredentials: true, // send cookies when cross-domain requests
+    withCredentials: true, // send cookies when cross-domain requests
     timeout: 10000 // request timeout
 })
 

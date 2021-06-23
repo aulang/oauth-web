@@ -7,12 +7,12 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    authId: null,
+    //authId: null,
   },
   mutations: {
-    setAuthId(state, payload) {
-      state.authId = payload;
-    }
+    //setAuthId(state, payload) {
+    //  state.authId = payload;
+    //}
   },
   actions: {
   },

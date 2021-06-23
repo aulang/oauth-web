@@ -2,10 +2,14 @@ export function getToken() {
     return null
 }
 
-export function setToken(token) {
-    return token
+export function getAuthId() {
+    return localStorage.getItem('authId');
 }
 
-export function removeToken() {
-    return getToken()
+export function setAuthId(authId) {
+    localStorage.setItem('authId', authId);
+}
+
+export function removeAuthId() {
+    localStorage.removeItem('authId');
 }
