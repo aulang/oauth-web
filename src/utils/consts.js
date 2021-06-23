@@ -1,4 +1,4 @@
-const apiBaseUrl = 'http://localhost:8080';
+const apiBaseUrl = 'https://aulang.cn/api/oauth';
 const msgShowMilliseconds = 3 * 1000;
 
 const errorCodes = {

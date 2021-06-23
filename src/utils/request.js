@@ -4,6 +4,7 @@ import { getToken } from '@/utils/auth'
 import { apiBaseUrl } from '@/utils/consts'
 
 axios.defaults.crossDomain = true
+axios.defaults.withCredentials = true
 
 // create an axios instance
 const service = axios.create({
