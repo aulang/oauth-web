@@ -119,7 +119,7 @@ export default {
     },
     captchaUrl() {
       if (this.needCaptcha) {
-        return `${apiBaseUrl}/api/captcha/${this.authId}`
+        return `${apiBaseUrl}/captcha/${this.authId}`
       } else {
         return ''
       }

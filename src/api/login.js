@@ -5,7 +5,7 @@ export function login(data) {
     data.password = sha256(data.password);
 
     return request({
-        url: '/api/login',
+        url: '/login',
         method: 'post',
         data
     })

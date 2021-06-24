@@ -24,7 +24,15 @@
           <el-button
             slot="append"
             type="primary"
-          >发送验证码</el-button>
+            :disabled="show"
+            @click="onSend"
+          >获取验证码
+            <span
+              v-show="show"
+              class="count"
+              v-text="'(' + count + 's)'"
+            ></span>
+          </el-button>
         </el-input>
       </el-form-item>
 
@@ -41,6 +49,13 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
+import { send } from '@/api/captcha'
+import { getAuthId } from '@/utils/auth';
+import { msgShowMilliseconds } from '@/utils/consts'
+
+const TIME_COUNT = 60;
+
 export default {
   name: 'MobileLoginBox',
   props: {
@@ -59,12 +74,57 @@ export default {
         captcha: [
           { required: true, message: '请输入验证码', trigger: 'blur' },
         ]
-      }
+      },
+      target: null,
+      show: false,
+      timer: null,
+      count: 60
     };
   },
   computed: {
+    authId() {
+      return getAuthId();
+    }
   },
   methods: {
+    onSend() {
+      this.$refs['from'].validateField('mobile', error => {
+        if (!error) {
+          this.sendCaptcha();
+        }
+      });
+    },
+    sendCaptcha() {
+      send({
+        authId: this.authId,
+        mobile: this.from.mobile
+      }).then(data => {
+        if (data.code !== 0) {
+          Message({
+            message: data.msg,
+            type: 'error',
+            duration: msgShowMilliseconds
+          });
+          return;
+        }
+
+        this.target = data.data.target;
+
+        if (!this.timer) {
+          this.count = TIME_COUNT;
+          this.show = true;
+          this.timer = setInterval(() => {
+            if (this.count > 0 && this.count <= TIME_COUNT) {
+              this.count--;
+            } else {
+              this.show = false;
+              clearInterval(this.timer);
+              this.timer = null;
+            }
+          }, 1000)
+        }
+      });
+    },
     login() {
       global.alert(this.from.mobile);
     }
