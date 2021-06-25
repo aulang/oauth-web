@@ -40,7 +40,7 @@
         <el-button
           type="primary"
           class="loginBtn"
-          @click="login"
+          @click="onLogin"
           :disabled="disabled"
         >登 录</el-button>
       </el-form-item>
@@ -53,6 +53,7 @@ import { Message } from 'element-ui'
 import { send } from '@/api/captcha'
 import { getAuthId } from '@/utils/auth';
 import { msgShowMilliseconds } from '@/utils/consts'
+import { captcha, redirect } from '@/api/login';
 
 const TIME_COUNT = 60;
 
@@ -62,6 +63,18 @@ export default {
     disabled: Boolean
   },
   data() {
+    var validateCaptcha = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入验证码'));
+      } else {
+        if (!this.target) {
+          callback(new Error('请发送验证码'));
+          return;
+        }
+        callback();
+      }
+    };
+
     return {
       from: {
         mobile: '',
@@ -72,7 +85,7 @@ export default {
           { required: true, message: '请输入手机号', trigger: 'blur' }
         ],
         captcha: [
-          { required: true, message: '请输入验证码', trigger: 'blur' },
+          { validator: validateCaptcha, trigger: 'blur' },
         ]
       },
       target: null,
@@ -125,8 +138,32 @@ export default {
         }
       });
     },
+    onLogin() {
+      this.$refs['from'].validate((valid) => {
+        if (valid) {
+          this.login();
+          return true;
+        } else {
+          return false;
+        }
+      });
+    },
     login() {
-      global.alert(this.from.mobile);
+      captcha({
+        authId: this.authId,
+        mobile: this.from.mobile,
+        captcha: this.from.captcha
+      }).then(response => {
+        if (response.code !== 0) {
+          Message({
+            message: response.msg,
+            type: 'error',
+            duration: msgShowMilliseconds
+          });
+          return;
+        }
+        redirect(response.data);
+      })
     }
   }
 }

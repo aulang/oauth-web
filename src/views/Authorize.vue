@@ -59,8 +59,9 @@ import MobileLoginBox from '@/components/MobileLoginBox.vue'
 
 import { Message } from 'element-ui'
 import { authorize } from '@/api/authorize'
-import { getAuthId, setAuthId } from '@/utils/auth'
+import { getAuthId, getSSO, removeSSO, setAuthId } from '@/utils/auth'
 import { msgShowMilliseconds } from '@/utils/consts'
+import { redirect, sso } from '@/api/login'
 
 export default {
   name: 'Authorize',
@@ -118,18 +119,37 @@ export default {
       redirectUri: this.redirectUri,
       scope: this.scope,
       state: this.state
-    }).then(data => {
-      if (data.code !== 0) {
+    }).then(response => {
+      if (response.code !== 0) {
         Message({
-          message: data.msg,
+          message: response.msg,
           type: 'error',
           duration: msgShowMilliseconds
         });
         return;
       }
-      setAuthId(data.data.authId);
+      setAuthId(response.data.authId);
       this.disabled = false;
     });
+  },
+  beforeRouteEnter(to, from, next) {
+    if (getSSO()) {
+      // 单点登录
+      sso({
+        authId: getSSO(),
+        redirectUri: to.query.redirect_uri,
+        state: to.query.state
+      }).then(response => {
+        if (response.code === 0) {
+          redirect(response.data);
+          return;
+        }
+        removeSSO();
+        next();
+      });
+    } else {
+      next();
+    }
   }
 }
 </script>

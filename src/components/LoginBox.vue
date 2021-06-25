@@ -68,8 +68,8 @@
 
 <script>
 import { Message } from 'element-ui'
-import { login } from '@/api/login'
-import { getAuthId } from '@/utils/auth';
+import { login, redirect } from '@/api/login'
+import { getAuthId, setSSO } from '@/utils/auth';
 import { apiBaseUrl, msgShowMilliseconds, errorCodes } from '@/utils/consts'
 
 export default {
@@ -144,50 +144,32 @@ export default {
         username: this.from.username,
         password: this.from.password,
         captcha: this.from.captcha
-      }).then(data => {
-        if (data.code === errorCodes.needApproval) {
+      }).then(response => {
+        if (response.code === errorCodes.needApproval) {
           // 需要授权，重定向到授权页面
           this.$router.push('/approval');
           return;
-        } else if (data.code === errorCodes.passwordExpired) {
+        } else if (response.code === errorCodes.passwordExpired) {
           // 密码过期，修改密码
           this.$router.push('/change-pwd');
           return;
-        } else if (data.code === errorCodes.accountLocked) {
+        } else if (response.code === errorCodes.accountLocked) {
           // 账号锁定
           this.$router.push('/locked');
           return;
         }
 
-        if (data.code !== 0) {
+        if (response.code !== 0) {
           Message({
-            message: data.msg,
+            message: response.msg,
             type: 'error',
             duration: msgShowMilliseconds
           });
-          this.needCaptcha = !!data.data.needCaptcha;
+          this.needCaptcha = !!response.data.needCaptcha;
           return;
         }
-
-        let code = data.data.code;
-        let state = data.data.state;
-        let redirectUri = data.data.redirectUri;
-
-        let queryString = '';
-        if (state) {
-          queryString = `code=${code}&state=${state}`;
-        } else {
-          queryString = `code=${code}`;
-        }
-
-        let redirectUrl = redirectUri;
-        if (redirectUri.indexOf('?') > 0) {
-          redirectUrl = redirectUrl + queryString;
-        } else {
-          redirectUrl = redirectUrl + '?' + queryString;
-        }
-
-        window.location.assign(redirectUrl);
+        setSSO(response.data.authId);
+        redirect(response.data);
       });
 
       this.loading = false;
