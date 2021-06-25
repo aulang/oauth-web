@@ -4,6 +4,10 @@
     ref="from"
     :rules="rules"
   >
+    <el-form-item>
+      <span>密码已过期，请修改密码</span>
+    </el-form-item>
+
     <el-form-item prop="password">
       <el-input
         type="password"
@@ -28,7 +32,7 @@
       <el-button
         type="primary"
         class="submitBtn"
-        @click="submit"
+        @click="onChange"
       >修改密码</el-button>
     </el-form-item>
 
@@ -36,6 +40,12 @@
 </template>
 
 <script>
+import { changePwd } from '@/api/password';
+import { getAuthId } from '@/utils/auth';
+import { redirect } from '@/api/login';
+import { msgShowMilliseconds } from '@/utils/consts';
+import { Message } from 'element-ui';
+
 export default {
   name: 'ChangePasswordBox',
   data() {
@@ -64,9 +74,37 @@ export default {
       }
     }
   },
+  computed: {
+    authId() {
+      return getAuthId();
+    }
+  },
   methods: {
-    submit() {
-      global.alert(this.password)
+    onChange() {
+      this.$refs['from'].validate((valid) => {
+        if (valid) {
+          this.change();
+          return true;
+        } else {
+          return false;
+        }
+      });
+    },
+    change() {
+      changePwd(
+        this.authId,
+        this.from.password
+      ).then(response => {
+        if (response.code === 0) {
+          redirect(response.data);
+          return;
+        }
+        Message({
+          message: response.msg,
+          type: 'error',
+          duration: msgShowMilliseconds
+        });
+      });
     }
   }
 }

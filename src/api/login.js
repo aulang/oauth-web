@@ -48,3 +48,24 @@ export function redirect(data) {
 
     window.location.assign(redirectUrl);
 }
+
+export function rejectRedirect(data) {
+    let state = data.state;
+    let redirectUri = data.redirectUri;
+
+    let queryString = '';
+    if (state) {
+        queryString = `error=reject&state=${state}`;
+    } else {
+        queryString = 'error=reject';
+    }
+
+    let redirectUrl = redirectUri;
+    if (redirectUri.indexOf('?') > 0) {
+        redirectUrl = redirectUrl + queryString;
+    } else {
+        redirectUrl = redirectUrl + '?' + queryString;
+    }
+
+    window.location.assign(redirectUrl);
+}

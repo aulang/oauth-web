@@ -20,44 +20,87 @@
     <el-form-item>
       <el-button
         type="danger"
-        @click="reject"
+        @click="onReject"
       >拒&emsp;绝</el-button>
 
       <el-button
         type="primary"
-        @click="approval"
+        @click="onApproval"
       >授&emsp;权</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
+import { getAuthId } from '@/utils/auth'
+import { getApproval, approval, reject } from '@/api/approval'
+import { Message } from 'element-ui'
+import { msgShowMilliseconds } from '@/utils/consts'
+import { redirect, rejectRedirect } from '@/api/login'
+
 export default {
   name: 'ApprovalScope',
   data() {
     return {
       clientId: '',
-      clientName: '客户端',
+      clientName: '',
       scopes: [{
-        code: 'code1',
-        name: 'name1',
-        approved: true
-      },
-      {
-        code: 'code2',
-        name: 'name2',
+        code: '',
+        name: '',
         approved: false
       }],
       approvalScopes: []
     }
   },
-  methods: {
-    approval() {
-      console.log(this.approvalScopes)
-    },
-    reject() {
-      console.log(this.approvalScopes)
+  computed: {
+    authId() {
+      return getAuthId();
     }
+  },
+  methods: {
+    onApproval() {
+      approval(this.authId, this.approvalScopes).then(response => {
+        if (response.code === 0) {
+          redirect(response.data);
+          return;
+        }
+
+        Message({
+          message: response.msg,
+          type: 'error',
+          duration: msgShowMilliseconds
+        });
+      });
+    },
+    onReject() {
+      reject(this.authId).then(response => {
+        if (response.code === 0) {
+          rejectRedirect(response.data);
+          return;
+        }
+
+        Message({
+          message: response.msg,
+          type: 'error',
+          duration: msgShowMilliseconds
+        });
+      });
+    }
+  },
+  mounted() {
+    getApproval(this.authId).then(response => {
+      if (response.code !== 0) {
+        Message({
+          message: response.msg,
+          type: 'error',
+          duration: msgShowMilliseconds
+        });
+        return;
+      }
+      this.scopes = response.data.scopes;
+      this.clientId = response.data.clientId;
+      this.clientName = response.data.clientName;
+    });
   }
 }
 </script>
