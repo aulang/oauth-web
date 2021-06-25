@@ -46,7 +46,7 @@ export function redirect(data) {
         redirectUrl = redirectUrl + '?' + queryString;
     }
 
-    window.location.assign(redirectUrl);
+    window.location.replace(redirectUrl);
 }
 
 export function rejectRedirect(data) {
@@ -67,5 +67,5 @@ export function rejectRedirect(data) {
         redirectUrl = redirectUrl + '?' + queryString;
     }
 
-    window.location.assign(redirectUrl);
+    window.location.replace(redirectUrl);
 }
