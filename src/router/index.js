@@ -6,7 +6,6 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    // /authorize?client_id=5f37d9f4c4155cda795f8fe5&response_type=code&redirect_uri=https%3A%2F%2Faulang.cn%2Fsite%2Findex&state=123456&code_challenge=jZae727K08KaOmKSgOaGzww_XVqGr_PKEgIMkjrcbJI
     path: '/authorize',
     name: 'authorize',
     component: Authorize,
@@ -20,30 +19,37 @@ const routes = [
     })
   },
   {
-    path: '/index',
+    path: '/',
     name: 'index',
-    component: () => import('../views/Index.vue')
+    component: () => import('@/views/Index.vue')
   },
   {
     path: '/approval',
     name: 'approval',
-    component: () => import('../views/ApprovalScope.vue')
+    component: () => import('@/views/ApprovalScope.vue')
   },
   {
     path: '/locked',
     name: 'locked',
-    component: () => import('../views/AccountLocked.vue')
+    component: () => import('@/views/AccountLocked.vue')
   },
   {
     path: '/change-pwd',
     name: 'changePwd',
-    component: () => import('../views/ChangePassword.vue')
+    component: () => import('@/views/ChangePassword.vue')
   },
   {
     path: '/third-login',
     name: 'thirdLogin',
-    component: () => import('../views/ThirdLogin.vue')
-  }
+    component: () => import('@/views/ThirdLogin.vue')
+  },
+  {
+    path: '/404',
+    component: () => import('@/views/NotFound.vue'),
+    hidden: true
+  },
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }
 ]
 
 const router = new VueRouter({
