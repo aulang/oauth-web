@@ -1,19 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Authorize from '@/views/Authorize.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'index',
-    component: () => import('../views/Index.vue')
-  },
-  {
-    // /authorize?client_id=5f37d9f4c4155cda795f8fe5&response_type=code&scope=account&redirect_uri=https%3A%2F%2Faulang.cn%2Fsite%2Findex&state=123456&code_challenge=jZae727K08KaOmKSgOaGzww_XVqGr_PKEgIMkjrcbJI
+    // /authorize?client_id=5f37d9f4c4155cda795f8fe5&response_type=code&redirect_uri=https%3A%2F%2Faulang.cn%2Fsite%2Findex&state=123456&code_challenge=jZae727K08KaOmKSgOaGzww_XVqGr_PKEgIMkjrcbJI
     path: '/authorize',
     name: 'authorize',
-    component: () => import('../views/Authorize.vue'),
+    component: Authorize,
     props: route => ({
       clientId: route.query.client_id,
       responseType: route.query.response_type,
@@ -22,6 +18,11 @@ const routes = [
       redirectUri: route.query.redirect_uri,
       codeChallenge: route.query.code_challenge
     })
+  },
+  {
+    path: '/index',
+    name: 'index',
+    component: () => import('../views/Index.vue')
   },
   {
     path: '/approval',

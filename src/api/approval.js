@@ -20,7 +20,7 @@ export function approval(authId, approved) {
 
 export function reject(authId) {
     return request({
-        url: `/reject/${authId}`,
+        url: `/approval/reject/${authId}`,
         method: 'post'
     });
 }
