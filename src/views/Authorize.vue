@@ -102,7 +102,7 @@ export default {
     },
     thirdLogin(serverId) {
       redirectUrl(getAuthId(), serverId).then(response => {
-        if (response.code !== 0) {
+        if (response.code === 0) {
           location.assign(response.data);
           return;
         }
@@ -151,8 +151,8 @@ export default {
   },
   beforeMount() {
     servers().then(response => {
-      if (response.code !== 0) {
-        this.thirdServers = response.data;
+      if (response.code === 0) {
+        this.thirdServers = response.data.servers;
       }
     });
   }
