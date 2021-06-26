@@ -34,12 +34,12 @@ const routes = [
     component: () => import('@/views/AccountLocked.vue')
   },
   {
-    path: '/change-pwd',
+    path: '/change_pwd',
     name: 'changePwd',
     component: () => import('@/views/ChangePassword.vue')
   },
   {
-    path: '/third-login',
+    path: '/third_login',
     name: 'thirdLogin',
     component: () => import('@/views/ThirdLogin.vue')
   },
