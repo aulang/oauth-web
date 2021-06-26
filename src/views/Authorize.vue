@@ -34,10 +34,13 @@
       </el-image>
 
       <el-image
+        v-for="server in thirdServers"
+        :key="server.id"
+        :title="server.name + '登录'"
+        :src="server.logoUrl"
+        @click="thirdLogin(server.id)"
         fit="fill"
-        title="GitHub登录"
         class="loginTypeImg"
-        :src="require('@/assets/github.png')"
       >
       </el-image>
     </el-col>
@@ -59,9 +62,9 @@ import MobileLoginBox from '@/components/MobileLoginBox.vue'
 
 import { Message } from 'element-ui'
 import { authorize } from '@/api/authorize'
-import { getAuthId, getSSO, removeSSO, setAuthId } from '@/utils/auth'
+import { getAuthId, setAuthId } from '@/utils/auth'
 import { msgShowMilliseconds } from '@/utils/consts'
-import { redirect, sso } from '@/api/login'
+import { servers, redirectUrl } from '@/api/third_login'
 
 export default {
   name: 'Authorize',
@@ -82,7 +85,8 @@ export default {
       disabled: true,
       userpass: true,
       loginTypeMsg: '手机号登录',
-      loginTypeImgUrl: require('@/assets/mobile.png')
+      loginTypeImgUrl: require('@/assets/mobile.png'),
+      thirdServers: []
     }
   },
   methods: {
@@ -95,6 +99,19 @@ export default {
         this.loginTypeMsg = '账号密码登录';
         this.loginTypeImgUrl = require('@/assets/userpass.png')
       }
+    },
+    thirdLogin(serverId) {
+      redirectUrl(getAuthId(), serverId).then(response => {
+        if (response.code !== 0) {
+          location.assign(response.data);
+          return;
+        }
+        Message({
+          message: response.msg,
+          type: 'error',
+          duration: msgShowMilliseconds
+        });
+      })
     }
   },
   mounted() {
@@ -132,24 +149,12 @@ export default {
       this.disabled = false;
     });
   },
-  beforeRouteEnter(to, from, next) {
-    if (getSSO()) {
-      // 单点登录
-      sso({
-        authId: getSSO(),
-        redirectUri: to.query.redirect_uri,
-        state: to.query.state
-      }).then(response => {
-        if (response.code === 0) {
-          redirect(response.data);
-          return;
-        }
-        removeSSO();
-        next();
-      });
-    } else {
-      next();
-    }
+  beforeMount() {
+    servers().then(response => {
+      if (response.code !== 0) {
+        this.thirdServers = response.data;
+      }
+    });
   }
 }
 </script>

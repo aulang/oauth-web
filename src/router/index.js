@@ -2,6 +2,10 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Authorize from '@/views/Authorize.vue'
 
+import { redirect, sso } from '@/api/login'
+import { thirdLogin } from '@/api/third_login'
+import { getSSO, removeSSO } from '@/utils/auth'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -16,7 +20,26 @@ const routes = [
       state: route.query.state,
       redirectUri: route.query.redirect_uri,
       codeChallenge: route.query.code_challenge
-    })
+    }),
+    beforeEnter: (to, from, next) => {
+      if (getSSO() && to.query.client_id) {
+        // 单点登录
+        sso({
+          authId: getSSO(),
+          redirectUri: to.query.redirect_uri,
+          state: to.query.state
+        }).then(response => {
+          if (response.code === 0) {
+            redirect(response.data);
+            return;
+          }
+          removeSSO();
+          next();
+        });
+      } else {
+        next();
+      }
+    }
   },
   {
     path: '/',
@@ -41,7 +64,20 @@ const routes = [
   {
     path: '/third_login',
     name: 'thirdLogin',
-    component: () => import('@/views/ThirdLogin.vue')
+    component: () => import('@/views/ThirdLogin.vue'),
+    beforeEnter: (to, from, next) => {
+      if (to.query.code && to.query.state) {
+        thirdLogin(to.query.code, to.query.state).then(response => {
+          if (response.code === 0) {
+            redirect(response.data);
+            return;
+          }
+          next();
+        })
+      } else {
+        next();
+      }
+    }
   },
   {
     path: '/404',
