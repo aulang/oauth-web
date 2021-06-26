@@ -1,26 +1,31 @@
 <template>
-  <el-row type="flex">
-    <el-col :span="6"></el-col>
+  <layout>
+    <el-row type="flex">
+      <el-col :span="6"></el-col>
 
-    <el-col :span="12">
-      <el-alert
-        title="服务运行中……"
-        type="success"
-        center
-        show-icon
-        :closable="false"
-        :description="nowDate"
-      >
-      </el-alert>
-    </el-col>
+      <el-col :span="12">
+        <el-alert
+          title="服务运行中……"
+          type="success"
+          center
+          show-icon
+          :closable="false"
+          :description="nowDate"
+        >
+        </el-alert>
+      </el-col>
 
-    <el-col :span="6"></el-col>
-  </el-row>
+      <el-col :span="6"></el-col>
+    </el-row>
+  </layout>
 </template>
 
 <script>
+import Layout from '@/components/Layout.vue'
+
 export default {
   name: 'Index',
+  components: { Layout },
   data() {
     return {
       nowDate: ''

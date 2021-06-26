@@ -1,62 +1,65 @@
 <template>
-  <el-row type="flex">
-    <el-col
-      :xs="6"
-      :sm="8"
-      :md="8"
-      :lg="9"
-      :xl="9"
-    ></el-col>
+  <layout>
+    <el-row type="flex">
+      <el-col
+        :xs="6"
+        :sm="8"
+        :md="8"
+        :lg="9"
+        :xl="9"
+      ></el-col>
 
-    <el-col
-      :xs="12"
-      :sm="8"
-      :md="8"
-      :lg="6"
-      :xl="6"
-    >
-      <login-box
-        v-if="userpass"
-        :disabled="disabled"
-      ></login-box>
-      <mobile-login-box
-        v-else
-        :disabled="disabled"
-      ></mobile-login-box>
-
-      <el-image
-        fit="fill"
-        class="loginTypeImg"
-        :title="loginTypeMsg"
-        :src="loginTypeImgUrl"
-        @click="changeLoginType"
+      <el-col
+        :xs="12"
+        :sm="8"
+        :md="8"
+        :lg="6"
+        :xl="6"
       >
-      </el-image>
+        <login-box
+          v-if="userpass"
+          :disabled="disabled"
+        ></login-box>
+        <mobile-login-box
+          v-else
+          :disabled="disabled"
+        ></mobile-login-box>
 
-      <el-image
-        v-for="server in thirdServers"
-        :key="server.id"
-        :title="server.name + '登录'"
-        :src="server.logoUrl"
-        @click="thirdLogin(server.id)"
-        fit="fill"
-        class="loginTypeImg"
-      >
-      </el-image>
-    </el-col>
+        <el-image
+          fit="fill"
+          class="loginTypeImg"
+          :title="loginTypeMsg"
+          :src="loginTypeImgUrl"
+          @click="changeLoginType"
+        >
+        </el-image>
 
-    <el-col
-      :xs="6"
-      :sm="8"
-      :md="8"
-      :lg="9"
-      :xl="9"
-    ></el-col>
-  </el-row>
+        <el-image
+          v-for="server in thirdServers"
+          :key="server.id"
+          :title="server.name + '登录'"
+          :src="server.logoUrl"
+          @click="thirdLogin(server.id)"
+          fit="fill"
+          class="loginTypeImg"
+        >
+        </el-image>
+      </el-col>
+
+      <el-col
+        :xs="6"
+        :sm="8"
+        :md="8"
+        :lg="9"
+        :xl="9"
+      ></el-col>
+    </el-row>
+  </layout>
 </template>
 
 <script>
 // @ is an alias to /src
+import Layout from '@/components/Layout.vue'
 import LoginBox from '@/components/LoginBox.vue'
 import MobileLoginBox from '@/components/MobileLoginBox.vue'
 
@@ -77,8 +80,9 @@ export default {
     codeChallenge: String
   },
   components: {
+    Layout,
     LoginBox,
-    MobileLoginBox,
+    MobileLoginBox
   },
   data() {
     return {
