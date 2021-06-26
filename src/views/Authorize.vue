@@ -103,7 +103,7 @@ export default {
     thirdLogin(serverId) {
       redirectUrl(getAuthId(), serverId).then(response => {
         if (response.code === 0) {
-          location.assign(response.data);
+          location.assign(response.data.redirectUrl);
           return;
         }
         Message({
