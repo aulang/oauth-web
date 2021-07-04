@@ -50,10 +50,11 @@
 
 <script>
 import { Message } from 'element-ui'
+
 import { send } from '@/api/captcha'
 import { getAuthId } from '@/utils/auth';
-import { msgShowMilliseconds } from '@/utils/consts'
 import { captcha, redirect } from '@/api/login';
+import { msgShowMilliseconds } from '@/utils/consts'
 
 const TIME_COUNT = 60;
 

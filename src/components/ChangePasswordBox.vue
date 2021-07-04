@@ -40,11 +40,11 @@
 </template>
 
 <script>
-import { changePwd } from '@/api/password';
-import { getAuthId } from '@/utils/auth';
-import { redirect } from '@/api/login';
-import { msgShowMilliseconds } from '@/utils/consts';
 import { Message } from 'element-ui';
+import { redirect } from '@/api/login';
+import { getAuthId } from '@/utils/auth';
+import { changePwd } from '@/api/password';
+import { msgShowMilliseconds } from '@/utils/consts';
 
 export default {
   name: 'ChangePasswordBox',

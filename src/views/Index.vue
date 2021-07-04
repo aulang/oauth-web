@@ -51,7 +51,7 @@ export default {
       this.nowDate = `${year}/${month}/${day} ${hour}:${minute}:${second} ${weekArr[week]}`;
     }
   },
-  mounted() {
+  created() {
     this.currentTime();
   },
   // 销毁定时器

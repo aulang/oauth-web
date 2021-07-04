@@ -36,11 +36,11 @@
 <script>
 import Layout from '@/components/Layout.vue'
 
-import { getAuthId } from '@/utils/auth'
-import { getApproval, approval, reject } from '@/api/approval'
 import { Message } from 'element-ui'
+import { getAuthId } from '@/utils/auth'
 import { msgShowMilliseconds } from '@/utils/consts'
 import { redirect, rejectRedirect } from '@/api/login'
+import { getApproval, approval, reject } from '@/api/approval'
 
 export default {
   name: 'ApprovalScope',
@@ -92,7 +92,7 @@ export default {
       });
     }
   },
-  mounted() {
+  created() {
     getApproval(this.authId).then(response => {
       if (response.code !== 0) {
         Message({

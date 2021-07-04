@@ -118,7 +118,7 @@ export default {
       })
     }
   },
-  mounted() {
+  created() {
     if (getAuthId()) {
       this.disabled = false;
       return;
@@ -152,8 +152,7 @@ export default {
       setAuthId(response.data.authId);
       this.disabled = false;
     });
-  },
-  beforeMount() {
+
     servers().then(response => {
       if (response.code === 0) {
         this.thirdServers = response.data.servers;
